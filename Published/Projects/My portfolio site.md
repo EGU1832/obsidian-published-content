@@ -1,3 +1,17 @@
+---
+title: 포트폴리오 사이트 프로젝트
+date: 2026-07-14
+tags:
+  - Obsidian
+  - GitHubActions
+  - ContextEngineering
+  - Automation
+description: Obsidian과 GitHub을 연동하여 블로그 및 이력서 페이지를 자동화하는 시스템 구축 과정을 다룹니다. AI 기반의 프론트 매터 생성부터 GitHub Actions를 활용한 배포 파이프라인 설계까지의 기술적 구현 단계를 상세히 설명합니다.
+category: project
+thumbnail: ../../Docs/Pasted%20image%2020260422204753.png
+draft: false
+---
+
 # Concepts
 
 **Context Engineering**
