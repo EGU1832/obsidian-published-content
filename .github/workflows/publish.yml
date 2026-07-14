@@ -1,63 +1,56 @@
-name: Test Markdown Converter
+name: Publish Obsidian Notes
 
 on:
   push:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
-  test-converter:
+  publish:
+    # github-actions가 만든 commit으로는 다시 실행하지 않음
+    if: github.actor != 'github-actions[bot]'
+
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
 
-      - name: Show Repository Structure
-        run: |
-          echo "===== Repository Root ====="
-          pwd
-          ls -la
-
-          echo ""
-          echo "===== Published ====="
-          ls -R Published
-
-      - name: Run Converter
+      - name: Convert Markdown
         run: |
           python obsidian-to-github-md.py
 
-      - name: Verify Temporary Output
-        run: |
-          echo ""
-          echo "===== .temp_publish ====="
-          ls -R .temp_publish
-
       - name: Replace Published Folder
         run: |
-          rm -rf Published
-          mv .temp_publish/Published Published
+          rsync -a --delete .temp_publish/Published/ Published/
           rm -rf .temp_publish
 
-      - name: Verify Published Folder
+      - name: Configure Git
         run: |
-          echo ""
-          echo "===== Published ====="
-          ls -R Published
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Check Git Status
+      - name: Commit Changes
         run: |
-          echo ""
-          echo "===== Git Status ====="
-          git status
+          git add Published
 
-      - name: Show Git Diff
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git commit -m "Auto publish"
+
+      - name: Push Changes
         run: |
-          echo ""
-          echo "===== Git Diff ====="
-          git diff --stat
+          git push
