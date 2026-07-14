@@ -7,8 +7,10 @@ GITHUB_USER = "EGU1832"
 REPO_NAME = "obsidian-published-content"
 
 CDN_BASE = (
-    f"https://cdn.jsdelivr.net/gh/"
-    f"{GITHUB_USER}/{REPO_NAME}@vault/Docs/"
+#    f"https://cdn.jsdelivr.net/gh/"
+#    f"{GITHUB_USER}/{REPO_NAME}@vault/Docs/"
+    f"https://raw.githubusercontent.com/"
+    f"{GITHUB_USER}/{REPO_NAME}/vault/Docs/"
 )
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
