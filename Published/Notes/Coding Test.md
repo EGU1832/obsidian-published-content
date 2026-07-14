@@ -13,9 +13,6 @@ category: study
 thumbnail: ""  
 draft: false  
 ---  
-
-<br>
-
 # How to Start  
 
 <br>
