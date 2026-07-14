@@ -324,7 +324,7 @@ Phase 3.4부터의 목표는 다음과 같다.
 content/obsidian
 ```
 
-
+Github Actions 어렵다..
 
 ## Phase 4. Resume Page 개설 및 암호화
 
