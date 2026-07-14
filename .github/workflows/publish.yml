@@ -1,4 +1,4 @@
-name: Publish Obsidian Notes
+name: Test Markdown Converter
 
 on:
   push:
@@ -6,10 +6,33 @@ on:
       - main
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
+  test-converter:
+    runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      - run: ls -R
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Show Repository Structure
+        run: |
+          echo "Repository Root"
+          pwd
+          ls -la
+          echo ""
+          echo "Published"
+          ls -R Published
+
+      - name: Run Converter
+        run: |
+          python obsidian-to-github-md.py
+
+      - name: Verify Output
+        run: |
+          echo ""
+          echo "===== .temp_publish ====="
+          ls -R .temp_publish
