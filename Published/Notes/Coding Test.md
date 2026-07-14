@@ -9,7 +9,6 @@ category: study
 thumbnail: ""
 draft: false
 ---
-
 # How to Start
 
 매 스터디마다 주제가 정해집니다.
