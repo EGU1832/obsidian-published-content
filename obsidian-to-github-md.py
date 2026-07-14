@@ -41,12 +41,22 @@ def find_code_block_ranges(content: str):
 def is_inside_blocks(index: int, blocks: list):
     return any(start <= index < end for start, end in blocks)
 
+# Detect YAML frontmatter line range (start, end) inclusive of both '---' fences
+def find_frontmatter_line_range(lines: list):
+    if not lines or lines[0].strip() != '---':
+        return None
+    for i in range(1, len(lines)):
+        if lines[i].strip() == '---':
+            return (0, i)
+    return None
+
 # Add line breaks
 def add_line_breaks(content: str) -> str:
     latex_blocks = find_latex_blocks(content)
     code_blocks = find_code_block_ranges(content)
 
     lines = content.split('\n')
+    frontmatter_range = find_frontmatter_line_range(lines)
     new_lines = []
     current_index = 0
 
@@ -54,7 +64,9 @@ def add_line_breaks(content: str) -> str:
         line_len = len(line) + 1
         next_line = lines[i + 1] if i + 1 < len(lines) else ''
 
-        if is_inside_blocks(current_index, latex_blocks) or is_inside_blocks(current_index, code_blocks):
+        if frontmatter_range and frontmatter_range[0] <= i <= frontmatter_range[1]:
+            new_lines.append(line)
+        elif is_inside_blocks(current_index, latex_blocks) or is_inside_blocks(current_index, code_blocks):
             new_lines.append(line)
         else:
             if line.strip() == '' or next_line.strip().startswith('$$') or next_line.strip().startswith('$'):

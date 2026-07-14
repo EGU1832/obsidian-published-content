@@ -152,17 +152,17 @@ pair<int, pair<double, float> >
 ```cpp
 #include<cstdio>
 #include<vector>
-#include<utility>//pair있는 header
+#include<utility> //pair있는 header
 
 using namespace std;
 
-vector<pair<int,int> > vt;//vector나 queue등에 넣을 수 있음.
+vector<pair<int,int> > vt; //vector나 queue등에 넣을 수 있음.
 
 int main(void){
     int a1,a2;
     for(int i=0;i<10;i++){
         scanf("%d %d",&a1,&a2);
-        vt.push_back(make_pair(a1,a2));//make_pair로 pair를 만듦
+        vt.push_back(make_pair(a1,a2)); //make_pair로 pair를 만듦
     }
     for(vector<pair<int,int> >::iterator iter=vt.begin();iter!=vt.end();iter++)
         printf("%d %d\n",iter->first,iter->second);//첫번째 원소는 first 두번째 원소는 second로 접근. vector의 iterator로 접근해서 포인터 접근함.
