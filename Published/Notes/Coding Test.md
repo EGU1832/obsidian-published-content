@@ -1,18 +1,14 @@
----  
-title: 코테  
-date: 2026-07-14  
+---
+title: 코테
+date: 2026-07-14
 
-<br>
+tags: [CodingTest, Algorithm, STL, DataStructure]
+description: "코딩 테스트 대비를 위한 언어 선택 가이드와 필수 STL 및 알고리즘 개념을 체계적으로 정리한 학습 로드맵입니다. 효율적인 문제 풀이 전략과 코드 최적화, 변수 최소화 기법 등 실전 역량을 강화하기 위한 핵심 가이드를 제공합니다."
 
-tags: [CodingTest, Algorithm, STL, DataStructure]  
-description: "코딩 테스트 대비를 위한 언어 선택 가이드와 필수 STL 및 알고리즘 개념을 체계적으로 정리한 학습 로드맵입니다. 효율적인 문제 풀이 전략과 코드 최적화, 변수 최소화 기법 등 실전 역량을 강화하기 위한 핵심 가이드를 제공합니다."  
-
-<br>
-
-category: study  
-thumbnail: ""  
-draft: false  
----  
+category: study
+thumbnail: ""
+draft: false
+---
 # How to Start  
 
 <br>
@@ -224,17 +220,17 @@ pair<int, pair<double, float> >
 ```cpp  
 #include<cstdio>
 #include<vector>
-#include<utility>//pair있는 header
+#include<utility> //pair있는 header
 
 using namespace std;
 
-vector<pair<int,int> > vt;//vector나 queue등에 넣을 수 있음.
+vector<pair<int,int> > vt; //vector나 queue등에 넣을 수 있음.
 
 int main(void){
     int a1,a2;
     for(int i=0;i<10;i++){
         scanf("%d %d",&a1,&a2);
-        vt.push_back(make_pair(a1,a2));//make_pair로 pair를 만듦
+        vt.push_back(make_pair(a1,a2)); //make_pair로 pair를 만듦
     }
     for(vector<pair<int,int> >::iterator iter=vt.begin();iter!=vt.end();iter++)
         printf("%d %d\n",iter->first,iter->second);//첫번째 원소는 first 두번째 원소는 second로 접근. vector의 iterator로 접근해서 포인터 접근함.
