@@ -20,19 +20,44 @@ jobs:
 
       - name: Show Repository Structure
         run: |
-          echo "Repository Root"
+          echo "===== Repository Root ====="
           pwd
           ls -la
+
           echo ""
-          echo "Published"
+          echo "===== Published ====="
           ls -R Published
 
       - name: Run Converter
         run: |
           python obsidian-to-github-md.py
 
-      - name: Verify Output
+      - name: Verify Temporary Output
         run: |
           echo ""
           echo "===== .temp_publish ====="
           ls -R .temp_publish
+
+      - name: Replace Published Folder
+        run: |
+          rm -rf Published
+          mv .temp_publish/Published Published
+          rm -rf .temp_publish
+
+      - name: Verify Published Folder
+        run: |
+          echo ""
+          echo "===== Published ====="
+          ls -R Published
+
+      - name: Check Git Status
+        run: |
+          echo ""
+          echo "===== Git Status ====="
+          git status
+
+      - name: Show Git Diff
+        run: |
+          echo ""
+          echo "===== Git Diff ====="
+          git diff --stat
