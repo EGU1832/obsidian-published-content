@@ -21,7 +21,9 @@ Context Window = System Prompt + Conversation History + Retrieved Documents + Cu
 - Prompt Engineering 접근: "내일 회의 일정 잡아줘" → 기본적이고 로봇적인 응답
 - Context Engineering 접근: 캘린더 정보, 과거 이메일, 연락처 정보, 도구 접근권한을 모두 통합 → "Jim! 내일은 하루종일 빽빽해. 목요일 오전이 괜찮다면? 초대장 보냈어, 확인해봐."
 
-# 2026.04.07 | Cursor Setting
+# Phase
+
+## Phase 1. Cursor Setting
 
 코테 준비 하다가 하기 싫어서 또 토이 프젝으로 도망 왔다.
 본격적인 사이트 개선에 앞서 바이브 코딩 준비를 해보고자 한다.
@@ -49,15 +51,12 @@ Cursor가 시니어 개발자처럼 행동하게 하는 것이 포인트다.
 
 이제 개발을 시작해보자. 
 
-
 | Command     | Key        |
 | ----------- | ---------- |
 | 터미널 열기      | `Ctrl + J` |
 | Composer 모드 | `Ctrl + I` |
 
-# 2026.04.22 | Post Page & Tagging
-
-## Overview
+## Phase 2. Post Page & Tagging
 
 우선 포스팅 페이지를 구축했다.
 기존에 첫화면에서 사용해서 public에 두었던 `.md` 컨텐츠들은 따로 `content/*.md`로 옮겼고, 그에 따라 코드도 전폭 수정했다.
@@ -71,7 +70,7 @@ Cursor가 시니어 개발자처럼 행동하게 하는 것이 포인트다.
 
 이 당시에 포스팅의 기반이 되는 Obsidian으로 작성한 Markdown에는 아직 Front Matter가 존재하지 않았다. 내가 옵시디언을 Raw하게 쓰고 있기도 했고 Template라는 것도 이번 개발을 진행하면서 처음알았다.
 
-## Development
+### Phase 2.1 Site Side Ebedding - Front Matter Generator
 
 **Front Matter**
 | 마크다운 문서나 정적 사이트 파일의 최상단에 `---`로 구분된 영역에 작성하는 Metadata 블록이다.
@@ -120,17 +119,17 @@ gray-matter를 사용해서 markdown 문서를
 
 태그 시스템을 기반으로 사이트 내 포스트 검색을 최적화하고자 하였다.
 
-#### Existing Tags
+**Existing Tags**
 
 Obsidian에서부터 날라온 태그들이다.
 그냥 둔다.
 
-#### Rule-based Tagging
+**Rule-based Tagging**
 
 content의 내용을 분석해서 내가 정의한 keyword `tagRules` 기반으로 Rule-based Classification을 한다.
 그냥 이 과정은 본문 내용을 바탕으로 문자열 일치 여부만 채크해서 해당 keyword를 가지고 있는 tag를 태그로 추가하는, 하드 코딩이다. 내가 일일이 사전을 정립해야한다는 단점이 있다.
 
-#### Light AI Tagging - Embedding
+**Light AI Tagging - Embedding**
 
 Embadding 기반 Taging을 하는데, `text-embadding-3-small`이라는 OpenAI API를 사용하였다.
 1. 글 제목 + 본문 일부를 Embedding을 통해 벡터로 변환한다.
@@ -144,7 +143,7 @@ Embadding 기반 Taging을 하는데, `text-embadding-3-small`이라는 OpenAI A
 음.. 굉장히 쓸데없는 짓을 했나 싶기도 하고
 경량 NLP 모델을 활용해서 의미있는 데이터를 추출했으니 좋은 경험이었나 싶기도 하다.
 
-## Result
+**Result**
 
 ![](../../Docs/Pasted%20image%2020260422212843.png)
 일단 굉장히 아마추어스러운 포스팅 화면이 완성되었다..
@@ -154,8 +153,6 @@ Embadding 기반 Taging을 하는데, `text-embadding-3-small`이라는 OpenAI A
 ![](../../Docs/{30A56EE3-8A8A-48F2-B19C-A23507CFF147}.png)
 
 Templater 기반 AI Hybrid Front Matter 생성에 대해선 후술하겠다.
-
-## Plan
 
 현재
 - Obsidian: 문서 작성 + Front Matter 생성
@@ -168,11 +165,11 @@ Templater 기반 AI Hybrid Front Matter 생성에 대해선 후술하겠다.
 
 이 과정에서는 draft 태그를 이용해 draft가 true(비공개)로 되어있으면 generate-post가 실행되지 않는 등 자원을 아끼는 방향으로 최대한 인프라를 구축해보고자 한다.
 
-# 2026.04.?? | Obsidian Templater - AI Hybrid Front Matter Generator
+### Phase 2.2 Obsidian Templater - AI Hybrid Front Matter Generator
 
 우선 전체적으로 gemini-flash-mini 모델을 사용해서 TOC(Table of Context) + 앞의 1000자를 바탕으로 토픽과 관련된 태그를 추출해내는 것 까지는 구현해놓았다.
 
-# 2026.05.13 | Obsidian - Github - My-site 연동
+## Phase 3. Obsidian-Github-Site 연동
 
 여태까지 구축해놓은 기능들을 활용 및 반영해서 Obsidian - My site 자동 연동 포스트 시스템을 새로이 구축하고자 한다.
 
@@ -194,7 +191,7 @@ Vercel
 
 문제는 지금 콘텐츠랑 사이트 코드가 강하게 결합되어있다는 점인데..
 
-## Feat 1: Git hook `pre-push`
+### Phase 3.1 Feat 1: Git hook
 
 일단 Git 이라는 Obsidian 플러그인을 깔았다.
 
@@ -228,7 +225,7 @@ GPT가 **jsDelivs CDN**이라는 것을 추천해줘서, 이걸로 한번 해볼
 
 우선 이를 반영해서 사이트에 올릴 문서를 변환하는 `obsidian-to-github-md.py`의 수정을 완료하였고, github에서 무사히 렌더링 되는 것도 확인하였다.
 
-## Feat 2: Github Actions
+### Phase 3.2 Feat 2: Github Actions
 
 Git hook으로 자동 변환 워크플로우를 구축하면 `obsidian-to-github-md.py` 변환기 내부에서 subprocess로 git 커맨드를 돌리는 구조라 pre-push를 사용하면
 - 두 번 push가 된다거나,
@@ -266,7 +263,52 @@ Push
 근데 이렇게 되면 로컬 커밋과 Github 커밋 플로우가 달라지기 때문에 `git push`로는 안 되고 `git push --force-with-lease`나  `git push --force`를 사용해야.. 하는데..
 Obsidian에서는 push를 커스텀 설정하는 기능이 없기 때문에 그냥 브랜치를 아예 분류하기로 했다.
 
-# 2026.06.15 | Resume Page 개설 및 암호화
+### Phase 3.3 Refactor: Separate Authoring and Deployment Branch
+
+```
+vault (Authoring)
+├── Docs/
+├── Published/      ← Obsidian Markdown
+├── .github/
+└── obsidian-to-github-md.py
+
+        ↓ GitHub Actions
+
+main (Deploy)
+└── Published/      ← GitHub Markdown
+```
+
+`vault` 브랜치는 Obsidian에서 직접 작성하는 원본 저장소 역할을 담당하고, `main` 브랜치는 GitHub에서 렌더링 가능한 Markdown만 보관하는 배포 브랜치로 사용하는 걸로 변경했다.
+
+GitHub Actions에서는 `vault` 브랜치에 Push가 발생하면 변환 스크립트를 실행하고, 생성된 결과만 `main` 브랜치의 `Published` 폴더에 반영하도록 구성하였다.
+
+결과적으로,
+
+- Obsidian에서는 기존 방식 그대로 문서를 작성하고,
+- GitHub에는 변환된 Markdown만 자동 게시되며,
+- Next.js는 `main` 브랜치의 `Published`만 읽도록 역할을 완전히 분리하였다.
+
+또한 이미지 링크도 `raw.githubusercontent.com` 기반으로 변환하여 GitHub에서도 별도 후처리 없이 Markdown 문서만으로 이미지가 정상적으로 표시되는 것을 확인하였다.
+
+### Phase 3.4 
+
+진짜 이 간단한게 뭐라고 이렇게 힘드냐
+어쨌든 지금 여기까지 된거다.
+
+```
+Obsidian Vault
+    ↓
+Published Content Repo <- 여기까지 완료
+    ↓ (submodule)
+Next.js Portfolio Site
+    ↓
+Vercel
+```
+
+이제 submodule을 사용하여 자동으로 github 
+
+
+## Phase 4. Resume Page 개설 및 암호화
 
 다음과 같은 구조로 간단하게 만들어볼까 생각 중이다
 
