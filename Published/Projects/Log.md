@@ -263,6 +263,8 @@ Push
 
 현재까지는 GitHub Actions를 통해 변환된 Markdown 문서가 정상적으로 생성되고, 원격 저장소까지 자동으로 반영되는 것을 확인하였다.
 
+근데 이렇게 되면 로컬 커밋과 Github 커밋 플로우가 달라지기 때문에 `git push`로는 안 되고 `git push --force-with-lease`를 사용해야한다. `git push --force`도 
+
 # 2026.06.15 | Resume Page 개설 및 암호화
 
 다음과 같은 구조로 간단하게 만들어볼까 생각 중이다
