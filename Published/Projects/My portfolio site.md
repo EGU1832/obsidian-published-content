@@ -21,6 +21,15 @@ Context Window = System Prompt + Conversation History + Retrieved Documents + Cu
 - Prompt Engineering 접근: "내일 회의 일정 잡아줘" → 기본적이고 로봇적인 응답
 - Context Engineering 접근: 캘린더 정보, 과거 이메일, 연락처 정보, 도구 접근권한을 모두 통합 → "Jim! 내일은 하루종일 빽빽해. 목요일 오전이 괜찮다면? 초대장 보냈어, 확인해봐."
 
+**Git Submodule**
+
+[3.4. 서브모듈 - 깃(Git) & 깃허브(GitHub)](https://wikidocs.net/300274)
+
+Git Submodule은 하나의 Git 저장소 안에 다른 Git 저장소를 포함시키는 기능이다.
+예를 들어서 웹 애플리케이션을 개발할 때 UI 컴포넌트 라이브러리를 별도의 저장소로 관리하면서 메인 프로젝트에서 사용할 수 있다.
+
+음.. 정확히 개념만 보곤 뭔지 감이 안 잡힌다.
+
 # Phase
 
 ## Phase 1. Cursor Setting
@@ -305,7 +314,16 @@ Next.js Portfolio Site
 Vercel
 ```
 
-이제 submodule을 사용하여 자동으로 github 
+이제 submodule을 사용하여 자동으로 github `obsidian-published-content/vault` 브랜치에 있는 `Published` 폴더 안에 있는 md들을 잘 구조화 해서 사이트에 자동으로 연동 되는 파이프라인을 구축하려고 계획 중이다.
+
+Phase 3.4부터의 목표는 다음과 같다.
+> Obsidian에서 글을 작성하면 별도의 수작업 없이 Portfolio Site Post 페이지에 자동으로 반영된다.
+
+우선 사이트 루트 폴더로 넘어가서 submodule 위치를 다음으로 설정했다.
+```
+content/obsidian
+```
+
 
 
 ## Phase 4. Resume Page 개설 및 암호화
