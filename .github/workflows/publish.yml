@@ -3,44 +3,86 @@ name: Publish Obsidian Notes
 on:
   push:
     branches:
-      - main
+      - vault
 
 permissions:
   contents: write
 
 jobs:
   publish:
-    # github-actions가 만든 commit으로는 다시 실행하지 않음
     if: github.actor != 'github-actions[bot]'
 
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      ########################################################
+      # Source Branch (vault)
+      ########################################################
+
+      - name: Checkout vault branch
         uses: actions/checkout@v4
         with:
+          ref: vault
+          path: vault
           fetch-depth: 0
+
+      ########################################################
+      # Python
+      ########################################################
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
 
+      ########################################################
+      # Markdown Compile
+      ########################################################
+
       - name: Convert Markdown
+        working-directory: vault
         run: |
           python obsidian-to-github-md.py
 
+      ########################################################
+      # Deploy Branch (main)
+      ########################################################
+
+      - name: Checkout deploy branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: deploy
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      ########################################################
+      # Replace Published
+      ########################################################
+
       - name: Replace Published Folder
         run: |
-          rsync -a --delete .temp_publish/Published/ Published/
-          rm -rf .temp_publish
+          rm -rf deploy/Published
+          mkdir -p deploy/Published
+
+          cp -R vault/.temp_publish/Published/. deploy/Published/
+
+      ########################################################
+      # Configure Git
+      ########################################################
 
       - name: Configure Git
+        working-directory: deploy
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+      ########################################################
+      # Commit
+      ########################################################
+
       - name: Commit Changes
+        working-directory: deploy
         run: |
           git add Published
 
@@ -51,6 +93,11 @@ jobs:
 
           git commit -m "Auto publish"
 
-      - name: Push Changes
+      ########################################################
+      # Push
+      ########################################################
+
+      - name: Push Deploy Branch
+        working-directory: deploy
         run: |
-          git push
+          git push origin main
