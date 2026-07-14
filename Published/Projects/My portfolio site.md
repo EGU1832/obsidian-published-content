@@ -325,6 +325,7 @@ content/obsidian
 ```
 
 Github Actions 어렵다..
+어려워!
 
 ## Phase 4. Resume Page 개설 및 암호화
 
