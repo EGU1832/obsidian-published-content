@@ -501,6 +501,7 @@ content/obsidian
 <br>
 
 Github Actions 어렵다..  
+어려워!  
 
 <br>
 
