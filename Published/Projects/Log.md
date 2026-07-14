@@ -180,7 +180,7 @@ Templater 기반 AI Hybrid Front Matter 생성에 대해선 후술하겠다.
 ```
 Obsidian Vault
     ↓
-Published Content Repo (private)
+Published Content Repo
     ↓ (submodule)
 Next.js Portfolio Site
     ↓
@@ -194,57 +194,15 @@ Vercel
 
 문제는 지금 콘텐츠랑 사이트 코드가 강하게 결합되어있다는 점인데..
 
-```
-Obsidian
-    ↓
-Obsidian Git Plugin
-    ↓
-Git pre-push hook
-    ↓
-macro.py
-    ↓
-obsidian-published-content repo
-    ↓
-submodule
-    ↓
-Next.js
-    ↓
-Vercel
-```
+## Feat 1: Git hook `pre-push`
 
 일단 Git 이라는 Obsidian 플러그인을 깔았다.
 
 Obsidian Vault(파일탐색기)에서 git init을 하고, `.gitignore`를 다음과 같이 구성하였다.
-```gitignore
-/.obsidian/workspace-mobile.json
-/.obsidian/workspace.json
-/.obsidian/app.json
-/.obsidian/cache/
+- 내가 올리기로 결정한 `Published` 폴더와 `Docs` 외에 모든 폴더 제외
+- `Docs` 폴더 안 민감 정보를 담고 있는 `.txt` 파일 제외
 
-/.trash/
-/.DS_Store
-
-/.vs/
-
-/Archive/
-/Area/
-/Project/
-/Resource/
-/Templates/
-/README.md
-```
-
-그 다음 Obsidian IDE로 넘어가보자.
-Git 플러그인을 활성화해서 우측에 다음과 같이 `.gitignore`에 추가한 폴더를 제외하고 모든 문서가 add 되어있는 것을 확인할 수 있다.
-![600](../../Docs/{A21BC5D8-9AFC-42E5-8526-B7FD10D19B8C}.png)
-
-좌측 버튼부터 순서대로
-```
-Commit-and-sync | Commit | Stage-all | Unstage-all | Push | Pull | Change-Layout | Refresh
-```
-이다.
-
-일단 기본적인 Git 원격 리포지토리 구성은 끝냈으니, 다음은 Git Hook를 이용하여 자동 변환 후 업로드를 해볼 차례다.
+일단 기본적인 Git 구성은 끝냈으니, 다음은 Git Hook를 이용하여 자동 변환 후 업로드를 해볼 차례다.
 ```
 Git pre-push hook
     ↓
@@ -267,6 +225,43 @@ GPT가 **jsDelivs CDN**이라는 것을 추천해줘서, 이걸로 한번 해볼
 - 안정적
 - Vercel 친화적
 이라고 한다.
+
+우선 이를 반영해서 사이트에 올릴 문서를 변환하는 `obsidian-to-github-md.py`의 수정을 완료하였고, github에서 무사히 렌더링 되는 것도 확인하였다.
+
+## Feat 2: Github Actions
+
+Git hook으로 자동 변환 워크플로우를 구축하면 `obsidian-to-github-md.py` 변환기 내부에서 subprocess로 git 커맨드를 돌리는 구조라 pre-push를 사용하면
+- 두 번 push가 된다거나,
+- commit 메시지를 내 맘대로 할 수 없다거나
+하는 문제가 있었다.
+
+그래서 Github Actions를 도입해서 `obsidian-to-github-md.py`는 변환기 역할만 수행하고 Git은 전혀 모르는 순수한 Compiler 역할만 담당하도록 변경했다.
+즉, `Published` 폴더의 원본 문서는 전혀 수정하지 않고 변환된 결과만 임시 폴더에 생성하도록 구조를 변경하였다.
+
+최종적으로 Github Actions를 활용하여 워크플로우를 다음과 같이 작성하였다.
+```
+git push
+↓
+GitHub Actions
+↓
+obsidian-to-github-md.py
+↓
+.temp_publish 생성
+↓
+Published 교체
+↓
+Commit
+↓
+Push
+```
+
+즉, 로컬 Obsidian Vault는 항상 Obsidian 문법을 유지하고, GitHub 저장소에는 GitHub Markdown으로 변환된 문서만 저장되는 구조를 구축했다.
+
+또한 변환 과정은 GitHub Actions의 Runner 내부에서만 수행되기 때문에
+임시 폴더(`.temp_publish`)는 작업 종료와 함께 자동으로 삭제된다.
+따라서 저장소나 저장소에 불필요한 임시 파일이 커밋되지 않는다.
+
+현재까지는 GitHub Actions를 통해 변환된 Markdown 문서가 정상적으로 생성되고, 원격 저장소까지 자동으로 반영되는 것을 확인하였다.
 
 # 2026.06.15 | Resume Page 개설 및 암호화
 
